@@ -1,0 +1,26 @@
+model_name,mae,rmse,mape_pct,r2_score,sku_id
+PyTorch LSTM (2-Layer),7.99,10.85,38.58,0.6286,FOODS_3_090_CA_1
+Ridge Regression,8.04,10.69,36.59,0.6391,FOODS_3_090_CA_1
+Seasonal Naive (7-Day),12.6,16.62,46.49,0.1275,FOODS_3_090_CA_1
+Naive (Persistence),14.04,17.47,37.74,0.0361,FOODS_3_090_CA_1
+Moving Average (7-Day),29.83,33.98,51.32,-2.6467,FOODS_3_090_CA_1
+Ridge Regression,2.45,3.36,18.76,0.5666,FOODS_1_001_CA_1
+PyTorch LSTM (2-Layer),2.57,3.49,19.92,0.5342,FOODS_1_001_CA_1
+Seasonal Naive (7-Day),3.76,4.95,24.04,0.0588,FOODS_1_001_CA_1
+Naive (Persistence),4.59,5.82,26.5,-0.299,FOODS_1_001_CA_1
+Moving Average (7-Day),8.28,9.86,36.11,-2.7254,FOODS_1_001_CA_1
+PyTorch LSTM (2-Layer),1.25,1.64,14.11,0.4082,HOUSEHOLD_1_001_CA_1
+Ridge Regression,1.26,1.65,14.33,0.3978,HOUSEHOLD_1_001_CA_1
+Seasonal Naive (7-Day),1.62,2.32,17.08,-0.1914,HOUSEHOLD_1_001_CA_1
+Naive (Persistence),1.9,2.46,19.23,-0.3387,HOUSEHOLD_1_001_CA_1
+Moving Average (7-Day),3.39,4.07,29.18,-2.6577,HOUSEHOLD_1_001_CA_1
+Ridge Regression,1.29,1.69,14.71,0.4125,HOUSEHOLD_2_005_CA_1
+PyTorch LSTM (2-Layer),1.33,1.76,15.13,0.3683,HOUSEHOLD_2_005_CA_1
+Naive (Persistence),1.9,2.55,20.82,-0.3277,HOUSEHOLD_2_005_CA_1
+Seasonal Naive (7-Day),1.91,2.48,18.87,-0.2645,HOUSEHOLD_2_005_CA_1
+Moving Average (7-Day),4.84,5.49,40.29,-5.1721,HOUSEHOLD_2_005_CA_1
+Ridge Regression,0.7,0.91,12.39,0.6916,HOBBIES_1_001_CA_1
+PyTorch LSTM (2-Layer),0.73,0.96,12.99,0.6598,HOBBIES_1_001_CA_1
+Seasonal Naive (7-Day),0.98,1.36,16.56,0.3171,HOBBIES_1_001_CA_1
+Naive (Persistence),1.27,1.64,20.62,0.0027,HOBBIES_1_001_CA_1
+Moving Average (7-Day),2.54,2.98,37.34,-2.2926,HOBBIES_1_001_CA_1

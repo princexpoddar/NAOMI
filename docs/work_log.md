@@ -15,9 +15,9 @@
 | **Phase 0: Blueprint & Architecture** | ✅ Completed | All | `docs/Business Decision Companion (BDC) – Project Blueprint.pdf`<br>`docs/implementation_plan.md` | `a858f32`<br>`927b864` |
 | **Phase 1: Environment & Project Scaffolding** | ✅ Completed | Member 1 (You) | `requirements.txt`<br>`.gitignore`<br>`src/config.py`<br>`src/data/schemas.py` | `e5f0d64`<br>`52a00a6` |
 | **Phase 2: Dataset Curation (Walmart M5 & Synthetic)** | ✅ Completed | Member 1 (You) | `scripts/build_m5_curated_data.py`<br>`data/raw/walmart_m5_curated.csv` (9,565 rows)<br>`data/synthetic/generate_synthetic_data.py` | `e5f0d64` |
-| **Phase 3: Feature Engineering & Sequential Windowing** | ✅ Completed | Member 1 (You) | `src/data/pipeline.py`<br>`src/data/dataset.py`<br>`tests/test_data_pipeline.py` (5/5 tests pass) | *Committing now* |
-| **Phase 4: Demand Forecasting Engine (Baselines + LSTM)** | 🔄 In Progress | Member 1 (You) | `src/models/base.py`<br>`src/models/baseline.py`<br>`src/models/lstm.py`<br>`src/models/metrics.py` | *Upcoming* |
-| **Phase 5: Economics, Pricing & Profit Optimization** | ⏳ Queued | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
+| **Phase 3: Feature Engineering & Sequential Windowing** | ✅ Completed | Member 1 (You) | `src/data/pipeline.py`<br>`src/data/dataset.py`<br>`tests/test_data_pipeline.py` (5/5 tests pass) | `f957768` |
+| **Phase 4: Demand Forecasting Engine (Baselines + LSTM)** | ✅ Completed | Member 1 (You) | `src/models/`<br>`tests/test_models.py` (5/5 tests pass)<br>`scripts/train_and_benchmark.py`<br>`models_cache/` | *Committing now* |
+| **Phase 5: Economics, Pricing & Profit Optimization** | 🔄 Next | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
 | **Phase 6: Counterfactual Simulation & REST API** | ⏳ Queued | Member 3 | `src/core/simulator.py`<br>`src/api/main.py` | *Upcoming* |
 | **Phase 7: Executive Dashboard (Plotly Dash)** | ⏳ Queued | Member 4 | `src/dashboard/app.py`<br>`src/dashboard/layouts/`<br>`src/dashboard/components/`<br>`src/dashboard/callbacks/` | *Upcoming* |
 | **Phase 8: Presentation & LLM Narrative** | ⏳ Queued | Member 5 | `presentation/`<br>`src/llm/` | *Upcoming* |
@@ -88,16 +88,43 @@
     - `test_chronological_splits_integrity`: Asserts strict non-overlapping temporal splits.
     - `test_scaling_and_inverse_transformation`: Asserts scaling in $[0, 1]$ and inverse transform fidelity.
     - `test_pytorch_sliding_windows_and_dataloaders`: Asserts batch shape $(32, 30, 20)$ and target $(32, 1)$.
+  - `scripts/verify_all_skus.py`: Comprehensive test script validating all 5 SKUs end-to-end.
 * **Test Verification Status**: **All 5 automated tests passed (Exit Code 0).**
+* **Commit**: `f957768`
+
+---
+
+### Milestone 5: Demand Forecasting Engine (Baselines + PyTorch LSTM + Ablation)
+* **Date/Time**: 2026-09-04
+* **Files Created**:
+  - `src/models/base.py`: Abstract `BaseForecastModel` interface declaring `fit(X, y)` and `predict(X)`.
+  - `src/models/baseline.py`: Statistical baselines (`NaiveBenchmarkModel`, `SeasonalNaiveBenchmarkModel`, `MovingAverageBenchmarkModel`, `RidgeBenchmarkModel`).
+  - `src/models/lstm.py`: `DemandLSTM` 2-layer stacked network ($H=64$, dropout $0.2$, linear projection head), Smooth L1 Huber loss, Adam optimizer, early stopping, and Monte Carlo Dropout uncertainty quantification (`predict_with_confidence`).
+  - `src/models/metrics.py`: MAE, RMSE, MAPE, $R^2$, and automated ablation dataframe generator.
+  - `tests/test_models.py`: 5 automated tests covering baseline execution, LSTM forward pass, real training loop, uncertainty quantification, and metrics calculation.
+  - `scripts/train_and_benchmark.py`: End-to-end multi-model benchmarking script across all 5 SKUs.
+  - `docs/ablation_benchmark_results.csv`: Persisted quantitative benchmark table.
+  - `models_cache/pytorch_lstm.pt`: Checkpointed trained neural network weights (< 250 KB).
+* **Test Verification Status**: **All 5 model tests passed (Exit Code 0).**
+* **Benchmark Results Across All 5 Walmart SKUs**:
+
+| SKU ID | Category | Best Model | MAE | RMSE | MAPE (%) | $R^2$ Score |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`FOODS_3_090_CA_1`** | FOODS (High Vol) | **PyTorch LSTM** | **7.99** | 10.85 | 38.58% | **0.6286** |
+| `FOODS_1_001_CA_1` | FOODS (Staples) | **Ridge / LSTM** | **2.45** | 3.36 | 18.76% | **0.5666** |
+| **`HOUSEHOLD_1_001_CA_1`** | HOUSEHOLD (Cleaning) | **PyTorch LSTM** | **1.25** | 1.64 | **14.11%** | **0.4082** |
+| `HOUSEHOLD_2_005_CA_1` | HOUSEHOLD (Home) | **Ridge / LSTM** | **1.29** | 1.69 | **14.71%** | **0.4125** |
+| **`HOBBIES_1_001_CA_1`** | HOBBIES (Toys) | **Ridge / LSTM** | **0.70** | 0.91 | **12.39%** | **0.6916** |
+
+*Takeaway: Both PyTorch LSTM and Ridge substantially outperform Naive (MAE 14.04 vs 7.99 on grocery) and Moving Average (MAE 29.83 vs 7.99). Low-volume goods achieve 12–15% MAPE.*
 
 ---
 
 ## 3. Immediate Next Steps & Action Plan
 
-1. **Commit Phase 3**: Commit and push `src/data/pipeline.py`, `src/data/dataset.py`, and `tests/test_data_pipeline.py` to `origin/main`.
-2. **Scaffold Demand Forecasting Engine (Phase 4)**:
-   - Implement `src/models/base.py` (abstract model interface).
-   - Implement `src/models/baseline.py` (Naive, 7-day Moving Average, Ridge Regression).
-   - Implement `src/models/lstm.py` (2-layer PyTorch stacked LSTM with Huber loss and early stopping).
-   - Implement `src/models/metrics.py` (MAE, RMSE, MAPE, $R^2$, benchmark table).
-   - Add unit tests `tests/test_models.py` and run training benchmark across the 5 SKUs.
+1. **Commit Phase 4**: Add, commit, and push `src/models/`, `tests/test_models.py`, `scripts/train_and_benchmark.py`, and `models_cache/` to `origin/main`.
+2. **Proceed to Phase 5: Economics, Pricing & Profit Optimization (Member 2)**:
+   - Implement `src/core/elasticity.py` (OLS log-log regression $\ln Q = \alpha + E_d \ln P$ on Walmart historical price markdowns + iso-elastic curve).
+   - Implement `src/core/optimizer.py` (100-point grid search + continuous `scipy.optimize.minimize_scalar` bounded on $[0.70 P_0, 1.40 P_0]$ to maximize $\Pi(P) = (P - c) Q(P) - F$).
+   - Implement `src/core/financial.py` (P&L breakdown, Gross Margin %, Breakeven units $\frac{F}{P - c}$).
+   - Implement `tests/test_elasticity_and_pricing.py` and `tests/test_financial_planner.py`.
