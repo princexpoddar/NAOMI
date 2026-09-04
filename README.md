@@ -75,6 +75,68 @@ cat docs/ablation_benchmark_results.csv
 
 ---
 
+## 🚨 Mandatory Git Collaboration & Strict Branching Protocol
+
+> [!CAUTION]
+> ### 🛑 STRICT RULE FOR ALL TEAM MEMBERS: NEVER PUSH DIRECTLY TO `main`!
+> The `main` branch is protected and reserved for verified, production-ready code that passes all automated test suites. All active development **MUST** take place in your designated feature branch. Direct pushes to `main` risk overwriting teammate work, causing merge conflicts, and breaking the build.
+
+### 🌿 Branch Allocation Matrix
+
+| Member | Designated Feature Branch | Scope / Subsystem | Direct File Ownership | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Member 1** | `main` | Foundational Pipeline & Forecasting | `data/`, `src/data/`, `src/models/`, `scripts/` | ✅ **Complete & Verified** |
+| **Member 2** | `feat/pricing-finance` | Economics, Elasticity & Optimization | `src/core/elasticity.py`, `optimizer.py`, `financial.py` | 🔄 Ready to develop |
+| **Member 3** | `feat/simulation-api` | Counterfactual Simulator & FastAPI | `src/core/simulator.py`, `src/api/` | 🔄 Ready to develop |
+| **Member 4** | `feat/dashboard-ui` | Executive Dashboard in Plotly Dash | `src/dashboard/` | 🔄 Ready to develop |
+| **Member 5** | `feat/presentation-llm` | Presentation, Demo Script & LLM | `presentation/`, `src/llm/` | 🔄 Ready to develop |
+
+### 📋 Exact Step-by-Step Git Workflow (Follow Strictly)
+
+1. **Pull the latest `main` before branching**:
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+2. **Create and switch to your dedicated branch**:
+   ```bash
+   # Member 2:
+   git checkout -b feat/pricing-finance
+
+   # Member 3:
+   git checkout -b feat/simulation-api
+
+   # Member 4:
+   git checkout -b feat/dashboard-ui
+
+   # Member 5:
+   git checkout -b feat/presentation-llm
+   ```
+
+3. **Verify you are on your feature branch**:
+   ```bash
+   git branch
+   # The asterisk (*) MUST be on your feature branch, NEVER on main!
+   ```
+
+4. **Develop, test, and commit in stages**:
+   ```bash
+   git add <your-changed-files>
+   git commit -m "feat(pricing): implement OLS elasticity estimation"
+   ```
+
+5. **Push your branch to GitHub**:
+   ```bash
+   git push -u origin feat/<your-branch-name>
+   ```
+
+6. **Open a Pull Request (PR)**:
+   - On GitHub, open a PR from your branch into `main`.
+   - Verify tests pass, get peer review, and merge cleanly.
+
+---
+
 ## 🛠️ Instant Developer Jumpstart Guide (By Role)
 
 The foundation (data, features, windowing, and trained models) is completely built. Each teammate can start their designated part immediately without merge conflicts:

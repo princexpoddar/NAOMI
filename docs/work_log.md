@@ -110,15 +110,18 @@
 
 ---
 
-### Milestone 6: Developer Onboarding & README Overhaul
+### Milestone 6: Developer Onboarding, README Overhaul & Git Collaboration Rules
 * **Date/Time**: 2026-09-05
 * **Files Modified**:
-  - `README.md`: Completely rewritten to provide:
+  - `README.md`:
     - Executive summary and architectural diagram.
     - Current technical status matrix across all 8 phases.
     - 30-second quickstart guide (`pip install -r requirements.txt`, verify scripts, run tests).
+    - **Mandatory Git Collaboration & Strict Branching Protocol**: Protected `main` branch policy, dedicated feature branch allocation matrix, and exact terminal commands to prevent accidental overwrites.
     - Role-by-role developer jumpstart guide with exact Git branch names, file scopes, ready-to-use input code snippets, and expected output signatures for Members 2, 3, 4, and 5.
     - Full repository layout and documentation hyperlinks.
+  - `docs/implementation_plan.md`:
+    - Reinforced Section 7.3 with strict feature branch isolation (`feat/*`) and PR review requirement before merging.
 
 ---
 
@@ -128,3 +131,4 @@
 2. **Member 3**: Checkout branch `feat/simulation-api` and implement `src/core/simulator.py`, `src/api/main.py`.
 3. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application.
 4. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
+

@@ -579,7 +579,10 @@ To prevent Git merge conflicts, members work **exclusively** in their designated
 
 ---
 
-### 7.3 Zero-Conflict Parallel Execution Protocol
+### 7.3 Zero-Conflict Parallel Execution & Strict Branching Protocol
+
+> [!CAUTION]
+> **Strict Git Rule**: `main` is protected. Never push directly to `main`. All members must work inside their dedicated feature branches (`feat/*`), commit atomically in stages, and submit Pull Requests for peer review before merging.
 
 To start working immediately without waiting for teammates to finish:
 
@@ -587,20 +590,22 @@ To start working immediately without waiting for teammates to finish:
    - Member 1 defines the dataclasses in `src/data/schemas.py` and pushes to `main`.
    - All members pull `main`.
    - Members 2, 3, 4 can use mock dictionaries (e.g. `mock_forecast = {"y_pred": 1200, "base_price": 50}`) to build and test their logic before Member 1 finishes LSTM training.
-2. **Step 2 (Day 2 to 4 - Isolated Feature Branches)**:
-   - Each member works only inside their designated git branch:
-     - `feat/data-and-models` (Member 1)
+2. **Step 2 (Day 2 to 4 - Isolated Feature Branches strictly)**:
+   - Each member works strictly inside their designated git branch:
+     - `feat/data-and-models` (Member 1 - Completed & merged)
      - `feat/pricing-finance` (Member 2)
      - `feat/simulation-api` (Member 3)
      - `feat/dashboard-ui` (Member 4)
      - `feat/presentation-llm` (Member 5)
-3. **Step 3 (Day 5 - Integration)**:
+   - Do not touch files belonging to another member's subsystem without coordinating first.
+3. **Step 3 (Day 5 - Integration & Pull Requests)**:
    - Member 1 merges verified models to `main`.
-   - Members 2 and 3 merge core modules to `main`.
-   - Member 4 replaces mock data with the live functions from `src/core/` and `src/models/`.
+   - Members 2 and 3 submit PRs to merge core modules to `main`.
+   - Member 4 replaces mock data with live functions from `src/core/` and `src/models/`.
    - Member 5 connects `src/llm/` and captures final live screenshots for the slide deck.
 4. **Step 4 (Day 6 - End-to-End Verification & Rehearsal)**:
-   - Run `pytest tests/` across the whole repository.
+   - Run test suite across the whole repository (`tests/test_data_pipeline.py`, `tests/test_models.py`, `tests/test_elasticity_and_pricing.py`).
    - Team joins Member 5 for a 5-minute timed demo rehearsal.
+
 
 
