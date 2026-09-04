@@ -106,25 +106,25 @@
   - `docs/ablation_benchmark_results.csv`: Persisted quantitative benchmark table.
   - `models_cache/pytorch_lstm.pt`: Checkpointed trained neural network weights (< 250 KB).
 * **Test Verification Status**: **All 5 model tests passed (Exit Code 0).**
-* **Benchmark Results Across All 5 Walmart SKUs**:
+* **Commit**: `07c48fa`
 
-| SKU ID | Category | Best Model | MAE | RMSE | MAPE (%) | $R^2$ Score |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`FOODS_3_090_CA_1`** | FOODS (High Vol) | **PyTorch LSTM** | **7.99** | 10.85 | 38.58% | **0.6286** |
-| `FOODS_1_001_CA_1` | FOODS (Staples) | **Ridge / LSTM** | **2.45** | 3.36 | 18.76% | **0.5666** |
-| **`HOUSEHOLD_1_001_CA_1`** | HOUSEHOLD (Cleaning) | **PyTorch LSTM** | **1.25** | 1.64 | **14.11%** | **0.4082** |
-| `HOUSEHOLD_2_005_CA_1` | HOUSEHOLD (Home) | **Ridge / LSTM** | **1.29** | 1.69 | **14.71%** | **0.4125** |
-| **`HOBBIES_1_001_CA_1`** | HOBBIES (Toys) | **Ridge / LSTM** | **0.70** | 0.91 | **12.39%** | **0.6916** |
+---
 
-*Takeaway: Both PyTorch LSTM and Ridge substantially outperform Naive (MAE 14.04 vs 7.99 on grocery) and Moving Average (MAE 29.83 vs 7.99). Low-volume goods achieve 12–15% MAPE.*
+### Milestone 6: Developer Onboarding & README Overhaul
+* **Date/Time**: 2026-09-05
+* **Files Modified**:
+  - `README.md`: Completely rewritten to provide:
+    - Executive summary and architectural diagram.
+    - Current technical status matrix across all 8 phases.
+    - 30-second quickstart guide (`pip install -r requirements.txt`, verify scripts, run tests).
+    - Role-by-role developer jumpstart guide with exact Git branch names, file scopes, ready-to-use input code snippets, and expected output signatures for Members 2, 3, 4, and 5.
+    - Full repository layout and documentation hyperlinks.
 
 ---
 
 ## 3. Immediate Next Steps & Action Plan
 
-1. **Commit Phase 4**: Add, commit, and push `src/models/`, `tests/test_models.py`, `scripts/train_and_benchmark.py`, and `models_cache/` to `origin/main`.
-2. **Proceed to Phase 5: Economics, Pricing & Profit Optimization (Member 2)**:
-   - Implement `src/core/elasticity.py` (OLS log-log regression $\ln Q = \alpha + E_d \ln P$ on Walmart historical price markdowns + iso-elastic curve).
-   - Implement `src/core/optimizer.py` (100-point grid search + continuous `scipy.optimize.minimize_scalar` bounded on $[0.70 P_0, 1.40 P_0]$ to maximize $\Pi(P) = (P - c) Q(P) - F$).
-   - Implement `src/core/financial.py` (P&L breakdown, Gross Margin %, Breakeven units $\frac{F}{P - c}$).
-   - Implement `tests/test_elasticity_and_pricing.py` and `tests/test_financial_planner.py`.
+1. **Member 2**: Checkout branch `feat/pricing-finance` and implement `src/core/elasticity.py`, `optimizer.py`, `financial.py`.
+2. **Member 3**: Checkout branch `feat/simulation-api` and implement `src/core/simulator.py`, `src/api/main.py`.
+3. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application.
+4. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
