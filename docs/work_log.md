@@ -19,7 +19,7 @@
 | **Phase 4: Demand Forecasting Engine (Baselines + LSTM)** | ✅ Completed | Member 1 (You) | `src/models/`<br>`tests/test_models.py` (5/5 tests pass)<br>`scripts/train_and_benchmark.py`<br>`models_cache/` | *Committing now* |
 | **Phase 5: Economics, Pricing & Profit Optimization** | 🔄 In Progress | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
 | **Phase 6: Counterfactual Simulation & REST API** | ✅ Completed | Member 3 | `src/core/simulator.py`<br>`src/api/main.py`<br>`tests/test_simulation.py` (44/44 tests pass) | PR #1 (`9ba9dbe`) |
-| **Phase 7: Executive Dashboard (Plotly Dash)** | ⏳ Queued | Member 4 | `src/dashboard/app.py`<br>`src/dashboard/layouts/`<br>`src/dashboard/components/`<br>`src/dashboard/callbacks/` | *Upcoming* |
+| **Phase 7: Executive Dashboard (Plotly Dash)** | ✅ Completed | Member 4 | `src/dashboard/`<br>`tests/test_dashboard.py` (12/12 tests pass) | `feat/dashboard-ui` |
 | **Phase 8: Presentation & LLM Narrative** | ⏳ Queued | Member 5 | `presentation/`<br>`src/llm/` | *Upcoming* |
 
 ---
@@ -144,9 +144,30 @@
 
 ---
 
+### Milestone 8: Executive Decision Dashboard (Plotly Dash & Reactive Analytics)
+* **Date/Time**: 2026-09-07
+* **Owner**: Member 4
+* **Branch**: `feat/dashboard-ui`
+* **Files Created**:
+  - `src/dashboard/assets/custom.css`: Dark slate glassmorphism theme (`#0B0F19`, `#161E2E`, emerald `#10B981`, amber `#F59E0B`), responsive grid layouts, custom pill badges, and slider styling.
+  - `src/dashboard/components/cards.py`: 5 KPI Hero Cards ($P^*$, $Q^*$, Projected Revenue, Projected Profit $\Pi^*$ with uplift badge, Gross Margin % / Breakeven units) + Strategic Decision Companion card.
+  - `src/dashboard/components/charts.py`: 3 C-suite Plotly visualizations:
+    1. Demand Trajectory Chart: Historical actuals + PyTorch LSTM forecast + 90% confidence interval envelope.
+    2. Profit & Revenue vs. Price Curve: 100-point parabolic sweep with optimal $P^*$ star marker.
+    3. Counterfactual Scenario Comparison: Grouped bar chart comparing Baseline vs. Simulated Shocks.
+  - `src/dashboard/components/controls.py`: Global header, 5-SKU dropdown, 1D/7D/30D horizon toggle, 4 simulation sliders (Price, Demand Shock, Cost Surge, Competitor Cut), and 5 instant scenario preset radio buttons.
+  - `src/dashboard/callbacks/main_callbacks.py`: High-performance analytical reactive engine updating all 25 outputs dynamically on slider/dropdown changes.
+  - `src/dashboard/layouts/main_layout.py`: Assembled responsive executive view with dark template figure initialization.
+  - `src/dashboard/app.py`: Dash application runner with Darkly theme, Bootstrap icons, and clean WSGI server export.
+  - `tests/test_dashboard.py`: 12 automated unit and integration tests covering component generation, chart rendering, layout configuration, and end-to-end analytical math.
+* **Test Verification Status**: **All 12 dashboard tests passed (56/56 passing across entire repository).**
+
+---
+
 ## 3. Immediate Next Steps & Action Plan
 
 1. **Member 2**: Checkout branch `feat/pricing-finance` and implement `src/core/elasticity.py`, `optimizer.py`, `financial.py`.
-2. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application connecting directly to the now-stable API.
+2. **Member 4**: Open PR for branch `feat/dashboard-ui` to merge the completed Executive Dashboard into `main`.
 3. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
+
 
