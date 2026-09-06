@@ -17,8 +17,8 @@
 | **Phase 2: Dataset Curation (Walmart M5 & Synthetic)** | ✅ Completed | Member 1 (You) | `scripts/build_m5_curated_data.py`<br>`data/raw/walmart_m5_curated.csv` (9,565 rows)<br>`data/synthetic/generate_synthetic_data.py` | `e5f0d64` |
 | **Phase 3: Feature Engineering & Sequential Windowing** | ✅ Completed | Member 1 (You) | `src/data/pipeline.py`<br>`src/data/dataset.py`<br>`tests/test_data_pipeline.py` (5/5 tests pass) | `f957768` |
 | **Phase 4: Demand Forecasting Engine (Baselines + LSTM)** | ✅ Completed | Member 1 (You) | `src/models/`<br>`tests/test_models.py` (5/5 tests pass)<br>`scripts/train_and_benchmark.py`<br>`models_cache/` | *Committing now* |
-| **Phase 5: Economics, Pricing & Profit Optimization** | 🔄 Next | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
-| **Phase 6: Counterfactual Simulation & REST API** | ⏳ Queued | Member 3 | `src/core/simulator.py`<br>`src/api/main.py` | *Upcoming* |
+| **Phase 5: Economics, Pricing & Profit Optimization** | 🔄 In Progress | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
+| **Phase 6: Counterfactual Simulation & REST API** | ✅ Completed | Member 3 | `src/core/simulator.py`<br>`src/api/main.py`<br>`tests/test_simulation.py` (44/44 tests pass) | PR #1 (`9ba9dbe`) |
 | **Phase 7: Executive Dashboard (Plotly Dash)** | ⏳ Queued | Member 4 | `src/dashboard/app.py`<br>`src/dashboard/layouts/`<br>`src/dashboard/components/`<br>`src/dashboard/callbacks/` | *Upcoming* |
 | **Phase 8: Presentation & LLM Narrative** | ⏳ Queued | Member 5 | `presentation/`<br>`src/llm/` | *Upcoming* |
 
@@ -125,10 +125,28 @@
 
 ---
 
+### Milestone 7: Integration & Hardening of Phase 6 (Simulation APIs & Dual-Engine Async DB)
+* **Date/Time**: 2026-09-07
+* **Commits**: PR #1 merged (`9ba9dbe`) + hardening commit
+* **Actions Completed**:
+  1. Reviewed and merged PR #1 (`simulation apis` by Member 3).
+  2. Implemented Option B Dual-Engine Database Architecture:
+     - Configured serverless async SQLite (`sqlite+aiosqlite:///data/naomi.db`) as default out-of-the-box storage.
+     - Preserved production PostgreSQL support via `DATABASE_URL` environment variable.
+     - Added fail-safe persistence error handling so database network issues never crash API endpoints.
+  3. Fixed Scenario 4 (`competitor_price_war`) in `src/core/simulator.py` to dynamically compute demand contraction from `competitor_price_drop_pct` via cross-elasticity ($\varepsilon_{\text{cross}} = 2.0$).
+  4. Enhanced `POST /forecast` in `src/api/main.py`:
+     - Calibrated SKU-specific baseline demand levels from empirical Walmart M5 data.
+     - Connected ablation benchmark metrics lookup from `docs/ablation_benchmark_results.csv`.
+  5. Added `PyTorchLSTMModel.load_checkpoint()` class method in `src/models/lstm.py`.
+  6. Added `TestUnmockedSQLitePersistence` to `tests/test_simulation.py` asserting real DB writes.
+* **Test Verification Status**: **All 44 automated tests passed (Exit Code 0).**
+
+---
+
 ## 3. Immediate Next Steps & Action Plan
 
 1. **Member 2**: Checkout branch `feat/pricing-finance` and implement `src/core/elasticity.py`, `optimizer.py`, `financial.py`.
-2. **Member 3**: Checkout branch `feat/simulation-api` and implement `src/core/simulator.py`, `src/api/main.py`.
-3. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application.
-4. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
+2. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application connecting directly to the now-stable API.
+3. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
 

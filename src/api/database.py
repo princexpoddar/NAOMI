@@ -1,12 +1,6 @@
-"""
-PostgreSQL database connection and ORM models for NAOMI API.
-
-Uses SQLAlchemy async engine.  Connection URL is read from the DATABASE_URL
-environment variable (see .env.example).
-"""
-
+import logging
 import os
-from datetime import datetime
+from pathlib import Path
 from typing import AsyncGenerator
 
 from sqlalchemy import (
@@ -22,23 +16,36 @@ from sqlalchemy import (
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-# ------------------------------------------------------------------ #
-# Connection URL
-# ------------------------------------------------------------------ #
-# Expected format:  postgresql+asyncpg://user:password@host:port/dbname
-# Fallback is a safe default for local Docker-based development.
-DATABASE_URL: str = os.getenv(
-    "DATABASE_URL",
-    "postgresql+asyncpg://naomi:naomi_pass@localhost:5432/naomi_db",
-)
+from src.config import PROJECT_ROOT
 
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,           # Set True to log SQL statements during development
-    pool_size=10,
-    max_overflow=20,
-    pool_pre_ping=True,   # Recycle stale connections automatically
-)
+logger = logging.getLogger("naomi.database")
+
+# ------------------------------------------------------------------ #
+# Connection URL & Engine Configuration
+# ------------------------------------------------------------------ #
+DEFAULT_DB_DIR = PROJECT_ROOT / "data"
+DEFAULT_DB_DIR.mkdir(parents=True, exist_ok=True)
+DEFAULT_SQLITE_PATH = (DEFAULT_DB_DIR / "naomi.db").resolve()
+DEFAULT_SQLITE_URL = f"sqlite+aiosqlite:///{DEFAULT_SQLITE_PATH.as_posix()}"
+
+DATABASE_URL: str = os.getenv("DATABASE_URL", DEFAULT_SQLITE_URL)
+
+is_sqlite = DATABASE_URL.startswith("sqlite")
+
+if is_sqlite:
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        connect_args={"check_same_thread": False},
+    )
+else:
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True,
+    )
 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,

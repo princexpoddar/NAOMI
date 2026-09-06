@@ -103,13 +103,16 @@ class TestSimulatorUnit:
         assert result["demand_delta_pct"] == 0.0
         assert result["profit_delta_pct"] < 0  # profit must fall
 
-    # ── Scenario 4: Competitor Price War ──────────────────────────
-
     def test_competitor_price_war(self):
         result = simulate_scenario("competitor_price_war", BASE_KPIS, {})
         assert result["scenario_id"] == "S4"
         # Spec: −20% demand loss
         assert abs(result["demand_delta_pct"] - (-20.0)) < 0.01
+
+    def test_competitor_price_war_custom_drop(self):
+        result = simulate_scenario("competitor_price_war", BASE_KPIS, {"competitor_price_drop_pct": 5.0})
+        # 5% competitor price drop with cross-elasticity 2.0 -> 10% demand loss
+        assert abs(result["demand_delta_pct"] - (-10.0)) < 0.01
 
     def test_competitor_price_war_own_price_unchanged(self):
         result = simulate_scenario("competitor_price_war", BASE_KPIS, {})
@@ -336,3 +339,59 @@ class TestSimulateEndpoint:
             },
         )
         assert r.status_code == 200
+
+
+class TestUnmockedSQLitePersistence:
+    def test_unmocked_api_request_logs_to_sqlite(self):
+        """Verify endpoints work and persist into local SQLite without mock overrides."""
+        from src.api.database import get_db, init_db
+        import asyncio
+
+        # Ensure real tables exist
+        asyncio.run(init_db())
+
+        # Temporarily remove any mock overrides to test real DB persistence
+        saved_override = app.dependency_overrides.pop(get_db, None)
+
+        try:
+            with TestClient(app, raise_server_exceptions=True) as real_client:
+                # 1. Health check
+                r_health = real_client.get("/health")
+                assert r_health.status_code == 200
+
+                # 2. Simulate endpoint writes to DB without crashing
+                r_sim = real_client.post(
+                    "/simulate",
+                    json={
+                        "sku_id": "FOODS_3_090_CA_1",
+                        "scenario_type": "price_policy",
+                        "base_demand": 100.0,
+                        "params": {"delta_price_pct": 5.0},
+                    },
+                )
+                assert r_sim.status_code == 200
+                assert r_sim.json()["scenario_id"] == "S1"
+
+                # 3. Forecast endpoint works with SKU baselines and persists
+                r_fc = real_client.post(
+                    "/forecast",
+                    json={"sku_id": "FOODS_3_090_CA_1", "horizon": 7, "model": "lstm"},
+                )
+                assert r_fc.status_code == 200
+                assert len(r_fc.json()["y_pred"]) == 7
+
+            # Verify SQLite actually has the logged records
+            import sqlite3
+            from src.api.database import DEFAULT_SQLITE_PATH
+            con = sqlite3.connect(DEFAULT_SQLITE_PATH)
+            cur = con.cursor()
+            sim_count = cur.execute("SELECT COUNT(id) FROM simulation_logs").fetchone()[0]
+            fc_count = cur.execute("SELECT COUNT(id) FROM forecast_logs").fetchone()[0]
+            con.close()
+
+            assert sim_count >= 1, f"Expected at least 1 simulation log, found {sim_count}"
+            assert fc_count >= 1, f"Expected at least 1 forecast log, found {fc_count}"
+
+        finally:
+            if saved_override is not None:
+                app.dependency_overrides[get_db] = saved_override

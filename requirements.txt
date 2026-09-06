@@ -13,7 +13,8 @@ uvicorn>=0.23.0
 pytest>=7.4.0
 python-dotenv>=1.0.0
 requests>=2.31.0
-# PostgreSQL async driver
+# Async database drivers: SQLite (default zero-setup) and PostgreSQL (production)
+aiosqlite>=0.19.0
 asyncpg>=0.29.0
 # SQLAlchemy with async support
 sqlalchemy>=2.0.0

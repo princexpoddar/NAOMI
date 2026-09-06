@@ -40,8 +40,8 @@ flowchart LR
 | **Phase 2** | Primary Dataset Curation | ✅ **Done** | `data/raw/walmart_m5_curated.csv` (9,565 rows, 5 curated SKUs) |
 | **Phase 3** | Feature Pipeline & Windowing | ✅ **Done** | `src/data/pipeline.py`, `src/data/dataset.py`, `tests/test_data_pipeline.py` (5/5 tests pass) |
 | **Phase 4** | Demand Forecasting Engine | ✅ **Done** | `src/models/` (LSTM + 4 Baselines), `tests/test_models.py` (5/5 tests pass), `models_cache/pytorch_lstm.pt` |
-| **Phase 5** | Economics, Pricing & Optimization | 🔄 **Ready to start** | Owned by **Member 2** (`src/core/elasticity.py`, `optimizer.py`, `financial.py`) |
-| **Phase 6** | Counterfactual Simulator & API | 🔄 **Ready to start** | Owned by **Member 3** (`src/core/simulator.py`, `src/api/main.py`) |
+| **Phase 5** | Economics, Pricing & Optimization | 🔄 **In Progress** | Owned by **Member 2** (`src/core/elasticity.py`, `optimizer.py`, `financial.py`) |
+| **Phase 6** | Counterfactual Simulator & API | ✅ **Done** | Owned by **Member 3** (`src/core/simulator.py`, `src/api/main.py`, 44/44 tests pass) |
 | **Phase 7** | Executive Dashboard | 🔄 **Ready to start** | Owned by **Member 4** (`src/dashboard/`) |
 | **Phase 8** | Presentation & LLM Narrative | 🔄 **Ready to start** | Owned by **Member 5** (`presentation/`, `src/llm/`) |
 

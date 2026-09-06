@@ -162,11 +162,13 @@ def simulate_scenario(
     # ── Scenario 4: Competitor Price War ────────────────────────────────
     elif scenario_type == "competitor_price_war":
         """
-        Competitor drops their price by 10% ⟹ own-brand demand loss of 20%
-        via cross-price elasticity (hardcoded per spec).
+        Competitor drops price ⟹ own-brand demand loss via cross-price elasticity.
+        Baseline: 10% competitor price drop yields 20% own demand loss (cross-elasticity = 2.0).
         """
         competitor_price_drop_pct = float(params.get("competitor_price_drop_pct", 10.0))
-        demand_loss_pct = CROSS_ELASTICITY_DEMAND_LOSS_PCT  # 20% demand loss per spec
+        cross_elasticity = float(params.get("cross_elasticity", 2.0))
+        demand_loss_pct = float(params.get("demand_loss_pct", competitor_price_drop_pct * cross_elasticity))
+        demand_loss_pct = min(100.0, max(0.0, demand_loss_pct))
 
         new_demand = demand * (1.0 - demand_loss_pct / 100.0)
         new_demand = max(0.0, new_demand)
@@ -176,10 +178,10 @@ def simulate_scenario(
         scenario_name = "Competitor Price War"
         scenario_params = {
             "competitor_price_drop_pct": competitor_price_drop_pct,
-            "implied_demand_loss_pct": demand_loss_pct,
+            "implied_demand_loss_pct": round(demand_loss_pct, 4),
             "description": (
                 f"Competitor reduced price by {competitor_price_drop_pct}%, "
-                f"triggering a {demand_loss_pct}% cross-elasticity demand loss."
+                f"triggering a {round(demand_loss_pct, 2)}% cross-elasticity demand loss."
             ),
         }
 

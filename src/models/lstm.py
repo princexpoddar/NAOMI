@@ -82,6 +82,7 @@ class PyTorchLSTMModel(BaseForecastModel):
     ):
         super().__init__(model_name="PyTorch LSTM")
         self.device = device
+        self.input_dim = input_dim
         self.horizon = horizon
         self.network = DemandLSTM(
             input_dim=input_dim,
@@ -236,3 +237,20 @@ class PyTorchLSTMModel(BaseForecastModel):
             "horizon": self.horizon
         }, path)
         return path
+
+    @classmethod
+    def load_checkpoint(cls, filepath: Optional[Path] = None, device: Any = None) -> "PyTorchLSTMModel":
+        """Load model state from disk."""
+        path = filepath or (MODELS_DIR / "pytorch_lstm.pt")
+        if not path.exists():
+            raise FileNotFoundError(f"Checkpoint not found at {path}")
+        checkpoint = torch.load(path, map_location=device or "cpu", weights_only=False)
+        model = cls(
+            input_dim=checkpoint["input_dim"],
+            horizon=checkpoint.get("horizon", 1),
+            device=device
+        )
+        model.network.load_state_dict(checkpoint["state_dict"])
+        model.history = checkpoint.get("history", {})
+        model.network.eval()
+        return model
