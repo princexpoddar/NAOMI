@@ -2,8 +2,6 @@
 
 from pathlib import Path
 import os
-import torch
-
 # Base Directories
 SRC_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SRC_DIR.parent
@@ -98,7 +96,12 @@ PATIENCE = 10
 RANDOM_SEED = 42
 
 # Device (CPU is prioritized for zero-cost reproduction)
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+try:
+    import torch as _torch
+    DEVICE = _torch.device("cuda" if _torch.cuda.is_available() else "cpu")
+except ImportError:
+    # torch not installed — device config unavailable outside ML training
+    DEVICE = None  # type: ignore[assignment]
 
 # Financial & Pricing Parameters
 DEFAULT_COST_RATIO = 0.60  # Default unit cost = 60% of baseline price (40% gross margin)
