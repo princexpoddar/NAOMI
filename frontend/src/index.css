@@ -3,87 +3,47 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --pitch-black: #000000;
-    --crimson-neon: #E11D48;
-  }
-
   body {
-    background-color: #000000;
+    background-color: #09090B;
     color: #F4F4F5;
-    font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
   }
 
-  /* Custom high-end dark scrollbar */
+  /* Minimal dark scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #09090B;
   }
   ::-webkit-scrollbar-thumb {
     background: #27272A;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #E11D48;
+    background: #BE123C;
   }
 }
 
 @layer utilities {
-  /* Glassmorphism Card with obsidian background and subtle crimson hover */
-  .obsidian-card {
-    background: rgba(10, 10, 10, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 1rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Clean, structured card with subtle border */
+  .clean-card {
+    background: #0F0F12;
+    border: 1px solid #1F1F23;
+    border-radius: 0.75rem;
   }
 
-  .obsidian-card:hover {
-    border-color: rgba(225, 29, 72, 0.3);
-    box-shadow: 0 0 25px rgba(225, 29, 72, 0.12);
-  }
-
-  /* Crimson glowing card for hero elements */
-  .crimson-hero-card {
-    background: linear-gradient(135deg, rgba(20, 5, 10, 0.85) 0%, rgba(10, 10, 10, 0.9) 100%);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(225, 29, 72, 0.25);
-    box-shadow: 0 0 30px rgba(225, 29, 72, 0.15);
-  }
-
-  /* Neon text glow */
-  .text-glow-crimson {
-    text-shadow: 0 0 16px rgba(225, 29, 72, 0.65), 0 0 32px rgba(225, 29, 72, 0.3);
-  }
-
-  .text-glow-white {
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-  }
-
-  /* Shimmering gradient text */
-  .shimmer-crimson {
-    background: linear-gradient(
-      90deg,
-      #FFFFFF 0%,
-      #FB7185 25%,
-      #E11D48 50%,
-      #FB7185 75%,
-      #FFFFFF 100%
-    );
-    background-size: 200% auto;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: shimmer 4s linear infinite;
+  /* Highlighted card with refined crimson top edge or border */
+  .crimson-focus-card {
+    background: #0F0F12;
+    border: 1px solid rgba(190, 18, 60, 0.4);
+    border-radius: 0.75rem;
   }
 }
 
-/* Custom range slider styling */
+/* Minimal clean slider styling */
 input[type=range] {
   -webkit-appearance: none;
   background: transparent;
@@ -95,27 +55,24 @@ input[type=range]:focus {
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 18px;
-  width: 18px;
+  height: 14px;
+  width: 14px;
   border-radius: 50%;
   background: #FFFFFF;
-  border: 2px solid #E11D48;
+  border: 2px solid #BE123C;
   cursor: pointer;
-  margin-top: -6px;
-  box-shadow: 0 0 12px #FF1A55;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-top: -5px;
+  transition: transform 0.1s ease;
 }
 
 input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px #FF1A55;
+  transform: scale(1.15);
 }
 
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 6px;
+  height: 4px;
   cursor: pointer;
-  background: #18181B;
+  background: #27272A;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }

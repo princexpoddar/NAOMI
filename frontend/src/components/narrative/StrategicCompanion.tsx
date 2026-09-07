@@ -1,7 +1,5 @@
 import React from "react";
-import { Sparkles, ShieldCheck, AlertOctagon, Info } from "lucide-react";
 import { SimulationResult, SKUInfo } from "../../types";
-import { BorderBeam } from "../ui/BorderBeam";
 
 interface StrategicCompanionProps {
   simulation: SimulationResult;
@@ -12,95 +10,61 @@ export const StrategicCompanion: React.FC<StrategicCompanionProps> = ({
   simulation,
   sku,
 }) => {
-  const getRiskBadge = (risk: SimulationResult["risk_label"]) => {
+  const getRiskColor = (risk: SimulationResult["risk_label"]) => {
     switch (risk) {
       case "Positive":
-        return {
-          bg: "bg-emerald-950/80 border-emerald-500/50 text-emerald-300",
-          icon: ShieldCheck,
-        };
+        return "bg-emerald-950/80 border-emerald-700/60 text-emerald-300";
       case "Stable":
-        return {
-          bg: "bg-sky-950/80 border-sky-500/50 text-sky-300",
-          icon: ShieldCheck,
-        };
+        return "bg-zinc-800 border-zinc-700 text-zinc-200";
       case "Moderate Risk":
-        return {
-          bg: "bg-amber-950/80 border-amber-500/50 text-amber-300",
-          icon: AlertOctagon,
-        };
+        return "bg-amber-950/80 border-amber-700/60 text-amber-300";
       case "High Risk":
-        return {
-          bg: "bg-crimson-950/80 border-crimson-500/50 text-crimson-300",
-          icon: AlertOctagon,
-        };
       case "Critical Risk":
-        return {
-          bg: "bg-red-950 border-red-500 text-red-100 animate-pulse",
-          icon: AlertOctagon,
-        };
+        return "bg-rose-950 border-rose-700 text-rose-300";
     }
   };
 
-  const riskInfo = getRiskBadge(simulation.risk_label);
-  const RiskIcon = riskInfo.icon;
-
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-5 rounded-2xl bg-gradient-to-b from-crimson-950/20 via-obsidian-150 to-pitch-black border border-crimson-500/20 overflow-hidden shadow-crimson-sm">
-      <BorderBeam size={160} duration={8} borderWidth={1} colorFrom="#FF1A55" colorTo="#E11D48" />
-
+    <div className="w-full h-full flex flex-col justify-between rounded-xl border border-zinc-800/80 bg-[#0F0F12] p-5">
       <div>
-        {/* Header with Title & Dynamic Risk Pill */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-crimson-900/40 border border-crimson-500/30 flex items-center justify-center text-crimson-400">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold tracking-tight text-white">
-                Strategic Decision Companion
-              </h3>
-              <p className="text-[10px] text-zinc-400 font-mono">
-                Real-Time C-Suite Advisory Intelligence
-              </p>
-            </div>
-          </div>
-
-          <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border tracking-wide font-mono ${riskInfo.bg}`}
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold tracking-tight text-white">
+            Strategic Executive Brief
+          </h3>
+          <span
+            className={`px-2 py-0.5 rounded text-xs font-mono font-bold border ${getRiskColor(
+              simulation.risk_label
+            )}`}
           >
-            <RiskIcon className="w-3.5 h-3.5" />
-            <span>{simulation.risk_label}</span>
-          </div>
+            {simulation.risk_label}
+          </span>
         </div>
 
-        {/* Narrative Content Body */}
-        <div className="space-y-3 font-sans text-xs leading-relaxed text-zinc-300">
-          <p className="p-3 rounded-xl bg-obsidian-200/90 border border-white/5 text-zinc-200">
-            {simulation.executive_brief}
-          </p>
+        {/* Narrative Summary */}
+        <p className="text-xs text-zinc-300 leading-relaxed bg-[#141418] border border-zinc-800/80 p-3 rounded-lg mb-3">
+          {simulation.executive_brief}
+        </p>
 
-          <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-            <div className="p-2.5 rounded-lg bg-obsidian-200/60 border border-white/5 flex flex-col gap-0.5">
-              <span className="text-zinc-400 text-[10px] uppercase">Elasticity Profile</span>
-              <span className="font-bold text-crimson-300">
-                Ed = {sku.historical_elasticity.toFixed(2)} ({sku.historical_elasticity < -1 ? "Elastic" : "Inelastic"})
-              </span>
-            </div>
-            <div className="p-2.5 rounded-lg bg-obsidian-200/60 border border-white/5 flex flex-col gap-0.5">
-              <span className="text-zinc-400 text-[10px] uppercase">Breakeven Volume</span>
-              <span className="font-bold text-white">
-                {simulation.shocked_kpis.breakeven_units} units (${(simulation.shocked_kpis.breakeven_units * simulation.candidate_price).toFixed(0)})
-              </span>
-            </div>
+        {/* Structured Executive Metrics */}
+        <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+          <div className="p-2.5 rounded-lg bg-[#141418] border border-zinc-800/60 flex flex-col">
+            <span className="text-zinc-400 text-[10px]">Price Elasticity</span>
+            <span className="font-bold text-white mt-0.5">
+              Ed = {sku.historical_elasticity.toFixed(2)} ({sku.historical_elasticity < -1 ? "Elastic" : "Inelastic"})
+            </span>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-[#141418] border border-zinc-800/60 flex flex-col">
+            <span className="text-zinc-400 text-[10px]">Breakeven Volume</span>
+            <span className="font-bold text-white mt-0.5">
+              {simulation.shocked_kpis.breakeven_units} units
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Compliance Disclaimer Footer */}
-      <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2 text-[10px] text-zinc-400 font-mono">
-        <Info className="w-3.5 h-3.5 flex-shrink-0 text-zinc-400" />
-        <span>Notice: AI-assisted strategic guidance; non-binding C-suite recommendation.</span>
+      <div className="mt-3 pt-2.5 border-t border-zinc-800/60 text-[10px] text-zinc-400">
+        AI-assisted decision advisory • Non-binding C-suite recommendation
       </div>
     </div>
   );

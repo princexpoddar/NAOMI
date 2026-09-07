@@ -23,27 +23,23 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
   forecast,
   sku,
 }) => {
-  // Combine historical and forecast series into unified timeline
   const data: Array<{
     date: string;
     actual?: number;
     predicted?: number;
-    ciRange?: [number, number];
     lower_ci?: number;
     upper_ci?: number;
     baseline?: number;
   }> = [];
 
-  // Historical points (last 20 days for cleanliness)
-  const recentHistory = historical.slice(-20);
+  const recentHistory = historical.slice(-18);
   recentHistory.forEach((h) => {
     data.push({
-      date: h.date.slice(5), // MM-DD
+      date: h.date.slice(5),
       actual: h.actual,
     });
   });
 
-  // Stitch point: last historical date also has predicted starting point
   if (recentHistory.length > 0 && forecast.y_pred.length > 0) {
     const lastHist = recentHistory[recentHistory.length - 1];
     data[data.length - 1].predicted = lastHist.actual;
@@ -51,7 +47,6 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
     data[data.length - 1].upper_ci = lastHist.actual;
   }
 
-  // Forecast points
   forecast.forecast_dates.forEach((d, idx) => {
     data.push({
       date: d.slice(5),
@@ -64,42 +59,21 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-3 px-1">
+      <div className="flex items-center justify-between mb-2">
         <div>
-          <h3 className="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-crimson-500 shadow-crimson-laser" />
-            Demand Trajectory & LSTM Forecast Horizon
+          <h3 className="text-sm font-semibold tracking-tight text-white">
+            Demand Forecast & 90% Confidence Interval
           </h3>
-          <p className="text-[11px] text-zinc-400 font-mono">
-            {sku.item_name} ({sku.category}) • 90% Monte Carlo Confidence Ribbon
+          <p className="text-[11px] text-zinc-400">
+            {sku.item_name} • Historical sales vs. model forecast
           </p>
-        </div>
-        <div className="text-[11px] font-mono text-crimson-400 bg-crimson-950/70 border border-crimson-600/40 px-2 py-0.5 rounded">
-          MAE: {forecast.mae ?? "7.99"} • MAPE: {forecast.mape ?? "14.8"}%
         </div>
       </div>
 
-      <div className="w-full h-[280px]">
+      <div className="w-full h-[260px]">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              {/* Neon Crimson Drop-Shadow Filter */}
-              <filter id="crimson-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              {/* Shaded Confidence Ribbon Gradient */}
-              <linearGradient id="ci-gradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF1A55" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="#E11D48" stopOpacity={0.04} />
-              </linearGradient>
-            </defs>
-
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} opacity={0.4} />
+            <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.5} />
 
             <XAxis
               dataKey="date"
@@ -119,15 +93,15 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               content={({ active, payload, label }) => {
                 if (!active || !payload || !payload.length) return null;
                 return (
-                  <div className="rounded-xl border border-crimson-600/30 bg-pitch-black/95 p-3 shadow-crimson-md backdrop-blur-xl text-xs">
-                    <p className="font-mono text-zinc-400 mb-1">Date: {label}</p>
+                  <div className="rounded-lg border border-zinc-800 bg-[#121215] p-2.5 shadow-lg text-xs">
+                    <p className="font-mono text-zinc-400 mb-1">{label}</p>
                     {payload.map((entry, idx) => (
-                      <div key={idx} className="flex items-center justify-between gap-4 py-0.5">
-                        <span className="font-medium" style={{ color: entry.color }}>
+                      <div key={idx} className="flex items-center justify-between gap-3 py-0.5">
+                        <span className="text-zinc-300" style={{ color: entry.color }}>
                           {entry.name}:
                         </span>
                         <span className="font-mono font-bold text-white">
-                          {Number(entry.value).toFixed(1)} units
+                          {Number(entry.value).toFixed(1)}
                         </span>
                       </div>
                     ))}
@@ -140,22 +114,23 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               verticalAlign="top"
               align="right"
               iconType="circle"
-              wrapperStyle={{ fontSize: "11px", paddingBottom: "8px" }}
+              wrapperStyle={{ fontSize: "11px", paddingBottom: "6px" }}
             />
 
-            {/* 90% Confidence Band Envelope Area */}
+            {/* Confidence Band Envelope */}
             <Area
               type="monotone"
               dataKey="upper_ci"
               stroke="transparent"
-              fill="url(#ci-gradient)"
-              name="90% CI Envelope"
+              fill="#BE123C"
+              fillOpacity={0.12}
+              name="90% Confidence Band"
             />
             <Area
               type="monotone"
               dataKey="lower_ci"
               stroke="transparent"
-              fill="#000000"
+              fill="#09090B"
               name="CI Lower Bound"
               legendType="none"
             />
@@ -165,33 +140,30 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               type="monotone"
               dataKey="actual"
               stroke="#71717A"
-              strokeWidth={1.8}
-              dot={{ fill: "#71717A", r: 2 }}
-              activeDot={{ r: 4, fill: "#FFFFFF" }}
+              strokeWidth={1.5}
+              dot={{ fill: "#71717A", r: 1.5 }}
               name="Historical Actuals"
             />
 
-            {/* PyTorch LSTM Forecast with Crimson Glow */}
+            {/* Forecast Line */}
             <Line
               type="monotone"
               dataKey="predicted"
               stroke="#E11D48"
-              strokeWidth={2.8}
-              dot={{ fill: "#FF1A55", r: 3, stroke: "#FFFFFF", strokeWidth: 1 }}
-              activeDot={{ r: 5, fill: "#FF1A55", stroke: "#FFFFFF", strokeWidth: 2 }}
-              name="PyTorch LSTM Forecast"
-              filter="url(#crimson-glow)"
+              strokeWidth={2.2}
+              dot={{ fill: "#E11D48", r: 2.5 }}
+              name="Demand Forecast"
             />
 
-            {/* Naive Baseline Overlay */}
+            {/* Baseline */}
             <Line
               type="monotone"
               dataKey="baseline"
-              stroke="#F59E0B"
+              stroke="#D97706"
               strokeWidth={1.2}
-              strokeDasharray="4 4"
+              strokeDasharray="3 3"
               dot={false}
-              name="Naive Baseline"
+              name="Baseline Average"
             />
           </ComposedChart>
         </ResponsiveContainer>

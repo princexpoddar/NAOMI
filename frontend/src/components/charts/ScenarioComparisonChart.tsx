@@ -20,45 +20,42 @@ export const ScenarioComparisonChart: React.FC<ScenarioComparisonChartProps> = (
 }) => {
   const data = [
     {
-      metric: "Demand (Units)",
+      metric: "Demand",
       Baseline: simulation.baseline_kpis.demand,
-      Shocked: simulation.shocked_kpis.demand,
+      Simulated: simulation.shocked_kpis.demand,
     },
     {
       metric: "Revenue ($)",
       Baseline: simulation.baseline_kpis.revenue,
-      Shocked: simulation.shocked_kpis.revenue,
+      Simulated: simulation.shocked_kpis.revenue,
     },
     {
-      metric: "Gross Profit ($)",
+      metric: "Profit ($)",
       Baseline: simulation.baseline_kpis.gross_profit,
-      Shocked: simulation.shocked_kpis.gross_profit,
+      Simulated: simulation.shocked_kpis.gross_profit,
     },
   ];
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-2 px-1">
-        <div>
-          <h3 className="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-crimson-500 shadow-sm" />
-            Counterfactual Shock Impact Comparison
-          </h3>
-          <p className="text-[11px] text-zinc-400 font-mono">
-            Baseline Operating State vs. {simulation.scenario_type}
-          </p>
-        </div>
+    <div className="w-full h-full flex flex-col justify-between">
+      <div className="mb-2">
+        <h3 className="text-sm font-semibold tracking-tight text-white">
+          Scenario Impact vs. Baseline
+        </h3>
+        <p className="text-[11px] text-zinc-400">
+          Financial impact of active simulation parameters
+        </p>
       </div>
 
       <div className="w-full h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} opacity={0.35} />
+            <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.4} />
 
             <XAxis
               dataKey="metric"
               stroke="#52525B"
-              tick={{ fill: "#A1A1AA", fontSize: 11, fontFamily: "Inter, sans-serif" }}
+              tick={{ fill: "#A1A1AA", fontSize: 11 }}
               tickLine={false}
               axisLine={{ stroke: "#27272A" }}
             />
@@ -73,13 +70,11 @@ export const ScenarioComparisonChart: React.FC<ScenarioComparisonChartProps> = (
               content={({ active, payload, label }) => {
                 if (!active || !payload || !payload.length) return null;
                 return (
-                  <div className="rounded-xl border border-crimson-600/30 bg-pitch-black/95 p-3 shadow-crimson-md backdrop-blur-xl text-xs">
-                    <p className="font-mono text-zinc-300 font-bold mb-1">{label}</p>
+                  <div className="rounded-lg border border-zinc-800 bg-[#121215] p-2.5 shadow-lg text-xs">
+                    <p className="font-mono text-zinc-400 font-bold mb-1">{label}</p>
                     {payload.map((entry, idx) => (
-                      <div key={idx} className="flex items-center justify-between gap-4 py-0.5">
-                        <span className="font-medium" style={{ color: entry.color }}>
-                          {entry.name}:
-                        </span>
+                      <div key={idx} className="flex items-center justify-between gap-3 py-0.5">
+                        <span className="text-zinc-400">{entry.name}:</span>
                         <span className="font-mono font-bold text-white">
                           {Number(entry.value).toLocaleString(undefined, { maximumFractionDigits: 1 })}
                         </span>
@@ -97,20 +92,17 @@ export const ScenarioComparisonChart: React.FC<ScenarioComparisonChartProps> = (
               wrapperStyle={{ fontSize: "11px", paddingBottom: "6px" }}
             />
 
-            {/* Baseline Bars */}
             <Bar
               dataKey="Baseline"
-              name="Baseline State"
+              name="Baseline"
               fill="#3F3F46"
-              radius={[4, 4, 0, 0]}
+              radius={[3, 3, 0, 0]}
             />
-
-            {/* Shocked Scenario Bars */}
             <Bar
-              dataKey="Shocked"
-              name="Active Shock"
-              fill="#E11D48"
-              radius={[4, 4, 0, 0]}
+              dataKey="Simulated"
+              name="Simulated"
+              fill="#BE123C"
+              radius={[3, 3, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
