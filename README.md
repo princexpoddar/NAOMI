@@ -42,7 +42,7 @@ flowchart LR
 | **Phase 4** | Demand Forecasting Engine | ✅ **Done** | `src/models/` (LSTM + 4 Baselines), `tests/test_models.py` (5/5 tests pass), `models_cache/pytorch_lstm.pt` |
 | **Phase 5** | Economics, Pricing & Optimization | 🔄 **In Progress** | Owned by **Member 2** (`src/core/elasticity.py`, `optimizer.py`, `financial.py`) |
 | **Phase 6** | Counterfactual Simulator & API | ✅ **Done** | Owned by **Member 3** (`src/core/simulator.py`, `src/api/main.py`, 44/44 tests pass) |
-| **Phase 7** | Executive Dashboard | 🔄 **Ready to start** | Owned by **Member 4** (`src/dashboard/`) |
+| **Phase 7** | Executive Dashboard | ✅ **Done** | Owned by **Member 4** (`src/dashboard/`, 12/12 tests pass) |
 | **Phase 8** | Presentation & LLM Narrative | 🔄 **Ready to start** | Owned by **Member 5** (`presentation/`, `src/llm/`) |
 
 ---
@@ -68,10 +68,13 @@ python tests/test_models.py
 ```
 *Expected Output:* `ALL 5 FORECASTING MODEL TESTS PASSED SUCCESSFULLY!`
 
-### 4. Inspect Model Benchmark Ablation Results
+### 4. Launch Executive Decision Companion (Pitch Black & Crimson UI)
 ```bash
-cat docs/ablation_benchmark_results.csv
+python scripts/start_all.py
 ```
+*Access Points:*
+- **Executive React UI**: [http://localhost:5180](http://localhost:5180)
+- **FastAPI REST API**: [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
 
 ---
 
@@ -87,8 +90,8 @@ cat docs/ablation_benchmark_results.csv
 | :--- | :--- | :--- | :--- | :--- |
 | **Member 1** | `main` | Foundational Pipeline & Forecasting | `data/`, `src/data/`, `src/models/`, `scripts/` | ✅ **Complete & Verified** |
 | **Member 2** | `feat/pricing-finance` | Economics, Elasticity & Optimization | `src/core/elasticity.py`, `optimizer.py`, `financial.py` | 🔄 Ready to develop |
-| **Member 3** | `feat/simulation-api` | Counterfactual Simulator & FastAPI | `src/core/simulator.py`, `src/api/` | 🔄 Ready to develop |
-| **Member 4** | `feat/dashboard-ui` | Executive Dashboard in Plotly Dash | `src/dashboard/` | 🔄 Ready to develop |
+| **Member 3** | `feat/simulation-api` | Counterfactual Simulator & FastAPI | `src/core/simulator.py`, `src/api/` | ✅ **Complete & Merged (PR #1)** |
+| **Member 4** | `feat/dashboard-ui` | Executive Dashboard in Plotly Dash | `src/dashboard/`, `tests/test_dashboard.py` | ✅ **Complete & Verified** |
 | **Member 5** | `feat/presentation-llm` | Presentation, Demo Script & LLM | `presentation/`, `src/llm/` | 🔄 Ready to develop |
 
 ### 📋 Exact Step-by-Step Git Workflow (Follow Strictly)
@@ -284,7 +287,15 @@ NAOMI/
 ├── scripts/
 │   ├── build_m5_curated_data.py          # Dataset builder with real calendar events
 │   ├── verify_all_skus.py                # Verification script across all 5 SKUs
-│   └── train_and_benchmark.py            # Automated training & ablation benchmark runner
+│   ├── train_and_benchmark.py            # Automated training & ablation benchmark runner
+│   └── start_all.py                      # Full-stack launcher (FastAPI + React UI)
+├── frontend/                             # Pitch Black & Crimson React C-Suite Frontend
+│   ├── src/
+│   │   ├── components/                   # Bento KPI cards, Neon Recharts, Aceternity BorderBeam
+│   │   ├── services/api.ts               # Dual-engine API client & instant 60fps simulation
+│   │   └── App.tsx                       # Master executive companion interface
+│   ├── tailwind.config.ts                # OLED pitch-black & crimson neon design tokens
+│   └── package.json
 ├── src/
 │   ├── config.py                         # Global constants, hyper-parameters, SKU metadata
 │   ├── data/
@@ -314,7 +325,9 @@ NAOMI/
 │       └── main.py
 ├── tests/
 │   ├── test_data_pipeline.py             # 5 automated data tests (All passing)
-│   └── test_models.py                    # 5 automated model tests (All passing)
+│   ├── test_models.py                    # 5 automated model tests (All passing)
+│   ├── test_simulation.py                # 34 automated simulation & API tests (All passing)
+│   └── test_dashboard.py                 # 12 automated dashboard tests (All passing)
 ├── requirements.txt
 ├── .gitignore
 └── README.md

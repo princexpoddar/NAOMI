@@ -19,7 +19,7 @@
 | **Phase 4: Demand Forecasting Engine (Baselines + LSTM)** | ✅ Completed | Member 1 (You) | `src/models/`<br>`tests/test_models.py` (5/5 tests pass)<br>`scripts/train_and_benchmark.py`<br>`models_cache/` | *Committing now* |
 | **Phase 5: Economics, Pricing & Profit Optimization** | 🔄 In Progress | Member 2 | `src/core/elasticity.py`<br>`src/core/optimizer.py`<br>`src/core/financial.py` | *Upcoming* |
 | **Phase 6: Counterfactual Simulation & REST API** | ✅ Completed | Member 3 | `src/core/simulator.py`<br>`src/api/main.py`<br>`tests/test_simulation.py` (44/44 tests pass) | PR #1 (`9ba9dbe`) |
-| **Phase 7: Executive Dashboard (Plotly Dash)** | ⏳ Queued | Member 4 | `src/dashboard/app.py`<br>`src/dashboard/layouts/`<br>`src/dashboard/components/`<br>`src/dashboard/callbacks/` | *Upcoming* |
+| **Phase 7: Executive Dashboard (Plotly Dash)** | ✅ Completed | Member 4 | `src/dashboard/`<br>`tests/test_dashboard.py` (12/12 tests pass) | `feat/dashboard-ui` |
 | **Phase 8: Presentation & LLM Narrative** | ⏳ Queued | Member 5 | `presentation/`<br>`src/llm/` | *Upcoming* |
 
 ---
@@ -144,9 +144,42 @@
 
 ---
 
+### Milestone 8: Executive Decision Dashboard (Plotly Dash & Reactive Analytics)
+* **Date/Time**: 2026-09-07
+* **Owner**: Member 4
+* **Branch**: `feat/dashboard-ui`
+* **Files Created**:
+  - `src/dashboard/assets/custom.css`: Dark slate theme, responsive grid layouts, custom pill badges, and slider styling.
+  - `src/dashboard/components/cards.py`: 5 KPI Hero Cards ($P^*$, $Q^*$, Projected Revenue, Projected Profit $\Pi^*$ with uplift badge, Gross Margin % / Breakeven units) + Strategic Decision Companion card.
+  - `src/dashboard/components/charts.py`: 3 C-suite Plotly visualizations (Demand Trajectory, Profit & Revenue vs Price, Counterfactual Scenario Comparison).
+  - `src/dashboard/components/controls.py`: Global header, 5-SKU dropdown, 1D/7D/30D horizon toggle, 4 simulation sliders, and 5 instant scenario presets.
+  - `src/dashboard/callbacks/main_callbacks.py`: High-performance analytical reactive engine.
+  - `src/dashboard/layouts/main_layout.py`: Assembled responsive executive view.
+  - `src/dashboard/app.py`: Dash application runner with clean WSGI server export.
+  - `tests/test_dashboard.py`: 12 automated unit and integration tests covering component generation, chart rendering, layout configuration, and end-to-end analytical math.
+* **Test Verification Status**: **All 12 dashboard tests passed (56/56 passing across entire repository).**
+
+---
+
+### Milestone 9: Executive Dashboard UI Streamlining & Simplification
+* **Date/Time**: 2026-09-07
+* **Owner**: Member 4
+* **Branch**: `feat/dashboard-ui`
+* **Commits**: `2efe5c9`, `98ca80c`
+* **Actions Completed**:
+  1. Streamlined the React executive interface from flashy neon and busy animations to a calm, matte obsidian and crimson executive dashboard.
+  2. Removed spinning laser borders (`BorderBeam`), cursor spotlights, and rolling counter tickers.
+  3. Stripped developer clutter and internal technical jargon (`FastAPI Online :8000`, `PyTorch LSTM + Huber Loss`, `Empirical Walmart M5`, `MAE/MAPE`, etc.).
+  4. Organized layout into a clean, balanced 3-row architecture: Header → 5 Hero KPI Cards → 2 Core Charts → 3 Workspace Columns.
+  5. Reduced CSS bundle size from 25.8 kB to 14.07 kB (45% reduction).
+  6. Verified via live browser subagent and confirmed passing all 56 automated tests.
+
+---
+
 ## 3. Immediate Next Steps & Action Plan
 
 1. **Member 2**: Checkout branch `feat/pricing-finance` and implement `src/core/elasticity.py`, `optimizer.py`, `financial.py`.
-2. **Member 4**: Checkout branch `feat/dashboard-ui` and build `src/dashboard/` Plotly Dash application connecting directly to the now-stable API.
+2. **Member 4**: Open PR for branch `feat/dashboard-ui` to merge the completed Executive Dashboard into `main`.
 3. **Member 5**: Checkout branch `feat/presentation-llm` and build `presentation/SLIDE_DECK_CONTENT.md`, `DEMO_SCRIPT.md`, and `src/llm/`.
+
 
