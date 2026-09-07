@@ -13,27 +13,39 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
 }) => {
   const presets = [
     {
+      id: "baseline",
       label: "Baseline",
+      isActive: sliders.priceDeltaPct === 0 && sliders.demandShockPct === 0 && sliders.costSurgePct === 0 && sliders.competitorDropPct === 0,
       apply: () => onChangeSliders({ priceDeltaPct: 0, demandShockPct: 0, costSurgePct: 0, competitorDropPct: 0 }),
     },
     {
+      id: "price_up",
       label: "Price +5%",
+      isActive: sliders.priceDeltaPct === 5 && sliders.demandShockPct === 0 && sliders.costSurgePct === 0 && sliders.competitorDropPct === 0,
       apply: () => onChangeSliders({ priceDeltaPct: 5, demandShockPct: 0, costSurgePct: 0, competitorDropPct: 0 }),
     },
     {
+      id: "macro_shock",
       label: "Macro -15%",
+      isActive: sliders.priceDeltaPct === 0 && sliders.demandShockPct === -15 && sliders.costSurgePct === 0 && sliders.competitorDropPct === 0,
       apply: () => onChangeSliders({ priceDeltaPct: 0, demandShockPct: -15, costSurgePct: 0, competitorDropPct: 0 }),
     },
     {
+      id: "cost_surge",
       label: "Cost +10%",
+      isActive: sliders.priceDeltaPct === 0 && sliders.demandShockPct === 0 && sliders.costSurgePct === 10 && sliders.competitorDropPct === 0,
       apply: () => onChangeSliders({ priceDeltaPct: 0, demandShockPct: 0, costSurgePct: 10, competitorDropPct: 0 }),
     },
     {
+      id: "price_war",
       label: "Price War",
+      isActive: sliders.priceDeltaPct === 0 && sliders.demandShockPct === 0 && sliders.costSurgePct === 0 && sliders.competitorDropPct === 10,
       apply: () => onChangeSliders({ priceDeltaPct: 0, demandShockPct: 0, costSurgePct: 0, competitorDropPct: 10 }),
     },
     {
+      id: "stagflation",
       label: "Stagflation",
+      isActive: sliders.priceDeltaPct === 0 && sliders.demandShockPct === -8 && sliders.costSurgePct === 10 && sliders.competitorDropPct === 0,
       apply: () => onChangeSliders({ priceDeltaPct: 0, demandShockPct: -8, costSurgePct: 10, competitorDropPct: 0 }),
     },
   ];
@@ -50,33 +62,40 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
   return (
     <div className="w-full h-full flex flex-col justify-between">
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold tracking-tight text-white">
-            Counterfactual Simulation
-          </h3>
+        <div className="flex items-center justify-between mb-2.5">
+          <div>
+            <h3 className="text-sm font-semibold tracking-tight text-white">
+              Counterfactual Simulation
+            </h3>
+            <p className="text-[11px] text-zinc-400">Exogenous shock & pricing levers</p>
+          </div>
           <button
             onClick={handleReset}
-            className="text-[11px] text-zinc-400 hover:text-white px-2 py-0.5 rounded bg-zinc-800/80 border border-zinc-700/60 transition-colors"
+            className="text-[11px] text-zinc-400 hover:text-white px-2.5 py-0.5 rounded bg-zinc-800/80 border border-zinc-700/60 hover:border-zinc-500 transition-colors font-mono"
           >
             Reset
           </button>
         </div>
 
-        {/* Clean Presets Pill Row */}
+        {/* Presets Grid */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 mb-3">
-          {presets.map((preset, idx) => (
+          {presets.map((preset) => (
             <button
-              key={idx}
+              key={preset.id}
               onClick={preset.apply}
-              className="py-1 px-1.5 text-center rounded-lg bg-[#141418] border border-zinc-800 hover:border-rose-700/60 hover:text-white text-zinc-400 text-xs font-medium transition-colors"
+              className={`py-1 px-1.5 text-center rounded-lg text-xs font-medium transition-all ${
+                preset.isActive
+                  ? "bg-rose-950 border border-rose-700/80 text-white shadow-sm font-semibold"
+                  : "bg-[#111115] border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
+              }`}
             >
               {preset.label}
             </button>
           ))}
         </div>
 
-        {/* 4 Range Sliders */}
-        <div className="space-y-1.5">
+        {/* 4 Compact Range Sliders */}
+        <div className="space-y-1">
           <CustomSlider
             label="Candidate Price Adjustment"
             value={sliders.priceDeltaPct}
@@ -114,7 +133,6 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
             max={30}
             step={1}
             unit="%"
-            formatSign={false}
             onChange={(val) => onChangeSliders({ ...sliders, competitorDropPct: val })}
           />
         </div>

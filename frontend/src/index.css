@@ -41,6 +41,14 @@
     border: 1px solid rgba(190, 18, 60, 0.4);
     border-radius: 0.75rem;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* Minimal clean slider styling */

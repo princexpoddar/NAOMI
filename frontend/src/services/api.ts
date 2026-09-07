@@ -137,7 +137,8 @@ export function computeProfitLandscape(sku: SKUInfo): OptimizationData {
   const elasticity = sku.historical_elasticity;
   const baseDemand = BASE_DEMAND_MAP[sku.item_id] || 50.0;
   const unitCost = basePrice * DEFAULT_COST_RATIO;
-  const fixedCosts = DEFAULT_FIXED_COST;
+  // Allocate periodic fixed overhead ($500/month) to daily operations ($16.67/day)
+  const dailyFixedCosts = Math.round((DEFAULT_FIXED_COST / 30.0) * 100) / 100;
 
   const pMin = basePrice * 0.70;
   const pMax = basePrice * 1.40;
@@ -158,7 +159,8 @@ export function computeProfitLandscape(sku: SKUInfo): OptimizationData {
     // Constant elasticity demand function: Q = Q0 * (P / P0)^Ed
     const d = Math.max(0.1, baseDemand * Math.pow(p / basePrice, elasticity));
     const rev = p * d;
-    const profit = (p - unitCost) * d - fixedCosts;
+    // Operating Profit = (Price - Cost) * Demand - Daily Fixed Overhead
+    const profit = (p - unitCost) * d - dailyFixedCosts;
 
     curve_prices.push(Math.round(p * 100) / 100);
     curve_revenues.push(Math.round(rev * 100) / 100);
@@ -172,12 +174,13 @@ export function computeProfitLandscape(sku: SKUInfo): OptimizationData {
     }
   }
 
-  const baseProfit = (basePrice - unitCost) * baseDemand - fixedCosts;
-  const profitUpliftPct = baseProfit !== 0 ? ((bestProfit - baseProfit) / Math.abs(baseProfit)) * 100 : 0;
+  const baseProfit = (basePrice - unitCost) * baseDemand - dailyFixedCosts;
+  const profitUpliftPct = baseProfit > 0 ? ((bestProfit - baseProfit) / baseProfit) * 100 : 0;
   const priceChangePct = ((optimalPrice - basePrice) / basePrice) * 100;
-  const grossMarginPct = optimalRevenue > 0 ? (bestProfit / optimalRevenue) * 100 : 0;
+  // Gross Margin is standard textbook: (Price - Unit Cost) / Price
+  const grossMarginPct = optimalPrice > 0 ? ((optimalPrice - unitCost) / optimalPrice) * 100 : 0;
   const contribMargin = optimalPrice - unitCost;
-  const breakevenUnits = contribMargin > 0 ? fixedCosts / contribMargin : 0;
+  const breakevenUnits = contribMargin > 0 ? dailyFixedCosts / contribMargin : 0;
 
   return {
     sku_id: sku.item_id,
@@ -189,7 +192,7 @@ export function computeProfitLandscape(sku: SKUInfo): OptimizationData {
     price_change_pct: Math.round(priceChangePct * 10) / 10,
     gross_margin_pct: Math.round(grossMarginPct * 10) / 10,
     breakeven_units: Math.round(breakevenUnits),
-    fixed_costs: fixedCosts,
+    fixed_costs: dailyFixedCosts,
     curve_prices,
     curve_profits,
     curve_revenues,
@@ -205,15 +208,16 @@ export function computeSimulation(
   const elasticity = sku.historical_elasticity;
   const baseDemand = BASE_DEMAND_MAP[sku.item_id] || 50.0;
   const unitCost = basePrice * DEFAULT_COST_RATIO;
-  const fixedCosts = DEFAULT_FIXED_COST;
+  const dailyFixedCosts = Math.round((DEFAULT_FIXED_COST / 30.0) * 100) / 100;
 
   // Baseline Operating State
   const baseRevenue = basePrice * baseDemand;
   const baseCogs = unitCost * baseDemand;
-  const baseProfit = baseRevenue - baseCogs - fixedCosts;
-  const baseMargin = baseRevenue > 0 ? (baseProfit / baseRevenue) * 100 : 0;
+  const baseGrossProfit = (basePrice - unitCost) * baseDemand;
+  const baseNetProfit = baseGrossProfit - dailyFixedCosts;
+  const baseGrossMargin = basePrice > 0 ? ((basePrice - unitCost) / basePrice) * 100 : 0;
   const baseContrib = basePrice - unitCost;
-  const baseBreakeven = baseContrib > 0 ? fixedCosts / baseContrib : 0;
+  const baseBreakeven = baseContrib > 0 ? dailyFixedCosts / baseContrib : 0;
 
   // Candidate price from slider
   const candidatePrice = basePrice * (1.0 + sliders.priceDeltaPct / 100.0);
@@ -235,14 +239,15 @@ export function computeSimulation(
   // Shocked Financials
   const shockedRevenue = candidatePrice * shockedDemand;
   const shockedCogs = shockedUnitCost * shockedDemand;
-  const shockedProfit = shockedRevenue - shockedCogs - fixedCosts;
-  const shockedMargin = shockedRevenue > 0 ? (shockedProfit / shockedRevenue) * 100 : 0;
+  const shockedGrossProfit = (candidatePrice - shockedUnitCost) * shockedDemand;
+  const shockedNetProfit = shockedGrossProfit - dailyFixedCosts;
+  const shockedGrossMargin = candidatePrice > 0 ? ((candidatePrice - shockedUnitCost) / candidatePrice) * 100 : 0;
   const shockedContrib = candidatePrice - shockedUnitCost;
-  const shockedBreakeven = shockedContrib > 0 ? fixedCosts / shockedContrib : 0;
+  const shockedBreakeven = shockedContrib > 0 ? dailyFixedCosts / shockedContrib : 0;
 
   const demandChangePct = ((shockedDemand - baseDemand) / baseDemand) * 100;
   const revenueChangePct = ((shockedRevenue - baseRevenue) / baseRevenue) * 100;
-  const profitChangePct = baseProfit !== 0 ? ((shockedProfit - baseProfit) / Math.abs(baseProfit)) * 100 : 0;
+  const profitChangePct = baseNetProfit !== 0 ? ((shockedNetProfit - baseNetProfit) / Math.abs(baseNetProfit)) * 100 : 0;
 
   // Risk Classification
   let riskLabel: "Positive" | "Stable" | "Moderate Risk" | "High Risk" | "Critical Risk";
@@ -272,7 +277,7 @@ export function computeSimulation(
       ? `Competitor Price War (-${sliders.competitorDropPct}%)`
       : "Baseline Operating State";
 
-  const executiveBrief = `For ${sku.item_name} (${sku.category}), empirical elasticity is measured at Ed = ${elasticity.toFixed(2)} (${elasticityType}). Under the active scenario (${scenarioName}), daily demand adjusts to ${shockedDemand.toFixed(1)} units (${demandChangePct > 0 ? "+" : ""}${demandChangePct.toFixed(1)}%), generating $${shockedRevenue.toFixed(2)} in gross revenue and $${shockedProfit.toFixed(2)} in net operating margin (${profitChangePct > 0 ? "+" : ""}${profitChangePct.toFixed(1)}% variance vs baseline). Breakeven volume requires ${Math.round(shockedBreakeven)} units. Strategic Risk Assessment: ${riskLabel}.`;
+  const executiveBrief = `For ${sku.item_name} (${sku.category}), empirical elasticity is measured at Ed = ${elasticity.toFixed(2)} (${elasticityType}). Under the active scenario (${scenarioName}), daily demand adjusts to ${shockedDemand.toFixed(1)} units (${demandChangePct >= 0 ? "+" : ""}${demandChangePct.toFixed(1)}%), generating $${shockedRevenue.toFixed(2)} in gross revenue and $${shockedNetProfit.toFixed(2)} in net operating profit (${profitChangePct >= 0 ? "+" : ""}${profitChangePct.toFixed(1)}% variance vs baseline). Breakeven volume requires ${Math.round(shockedBreakeven)} units/day. Strategic Risk Assessment: ${riskLabel}.`;
 
   return {
     scenario_type: scenarioName,
@@ -282,16 +287,16 @@ export function computeSimulation(
       demand: Math.round(baseDemand * 10) / 10,
       revenue: Math.round(baseRevenue * 100) / 100,
       cogs: Math.round(baseCogs * 100) / 100,
-      gross_profit: Math.round(baseProfit * 100) / 100,
-      gross_margin_pct: Math.round(baseMargin * 10) / 10,
+      gross_profit: Math.round(baseGrossProfit * 100) / 100,
+      gross_margin_pct: Math.round(baseGrossMargin * 10) / 10,
       breakeven_units: Math.round(baseBreakeven),
     },
     shocked_kpis: {
       demand: Math.round(shockedDemand * 10) / 10,
       revenue: Math.round(shockedRevenue * 100) / 100,
       cogs: Math.round(shockedCogs * 100) / 100,
-      gross_profit: Math.round(shockedProfit * 100) / 100,
-      gross_margin_pct: Math.round(shockedMargin * 10) / 10,
+      gross_profit: Math.round(shockedGrossProfit * 100) / 100,
+      gross_margin_pct: Math.round(shockedGrossMargin * 10) / 10,
       breakeven_units: Math.round(shockedBreakeven),
     },
     demand_change_pct: Math.round(demandChangePct * 10) / 10,

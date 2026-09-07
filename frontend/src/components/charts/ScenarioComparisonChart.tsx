@@ -47,8 +47,8 @@ export const ScenarioComparisonChart: React.FC<ScenarioComparisonChartProps> = (
         </p>
       </div>
 
-      <div className="w-full h-[250px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="w-full h-[250px] min-h-[250px]">
+        <ResponsiveContainer width="100%" height="100%" minHeight={250}>
           <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
             <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.4} />
 

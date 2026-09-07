@@ -45,8 +45,8 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
         </span>
       </div>
 
-      <div className="w-full h-[260px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="w-full h-[260px] min-h-[260px]">
+        <ResponsiveContainer width="100%" height="100%" minHeight={260}>
           <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.5} />
 
