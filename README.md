@@ -68,10 +68,13 @@ python tests/test_models.py
 ```
 *Expected Output:* `ALL 5 FORECASTING MODEL TESTS PASSED SUCCESSFULLY!`
 
-### 4. Inspect Model Benchmark Ablation Results
+### 4. Launch Executive Decision Companion (Pitch Black & Crimson UI)
 ```bash
-cat docs/ablation_benchmark_results.csv
+python scripts/start_all.py
 ```
+*Access Points:*
+- **Executive React UI**: [http://localhost:5180](http://localhost:5180)
+- **FastAPI REST API**: [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
 
 ---
 
@@ -284,7 +287,15 @@ NAOMI/
 ├── scripts/
 │   ├── build_m5_curated_data.py          # Dataset builder with real calendar events
 │   ├── verify_all_skus.py                # Verification script across all 5 SKUs
-│   └── train_and_benchmark.py            # Automated training & ablation benchmark runner
+│   ├── train_and_benchmark.py            # Automated training & ablation benchmark runner
+│   └── start_all.py                      # Full-stack launcher (FastAPI + React UI)
+├── frontend/                             # Pitch Black & Crimson React C-Suite Frontend
+│   ├── src/
+│   │   ├── components/                   # Bento KPI cards, Neon Recharts, Aceternity BorderBeam
+│   │   ├── services/api.ts               # Dual-engine API client & instant 60fps simulation
+│   │   └── App.tsx                       # Master executive companion interface
+│   ├── tailwind.config.ts                # OLED pitch-black & crimson neon design tokens
+│   └── package.json
 ├── src/
 │   ├── config.py                         # Global constants, hyper-parameters, SKU metadata
 │   ├── data/
