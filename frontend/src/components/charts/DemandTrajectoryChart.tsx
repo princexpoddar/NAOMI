@@ -73,18 +73,18 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
       <div className="w-full h-[260px] min-h-[260px]">
         <ResponsiveContainer width="100%" height="100%" minHeight={260}>
           <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.5} />
+            <CartesianGrid strokeDasharray="2 2" stroke="#1E293B" vertical={false} opacity={0.6} />
 
             <XAxis
               dataKey="date"
-              stroke="#52525B"
-              tick={{ fill: "#71717A", fontSize: 10, fontFamily: "JetBrains Mono" }}
+              stroke="#475569"
+              tick={{ fill: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" }}
               tickLine={false}
-              axisLine={{ stroke: "#27272A" }}
+              axisLine={{ stroke: "#1E293B" }}
             />
             <YAxis
-              stroke="#52525B"
-              tick={{ fill: "#71717A", fontSize: 10, fontFamily: "JetBrains Mono" }}
+              stroke="#475569"
+              tick={{ fill: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" }}
               tickLine={false}
               axisLine={false}
             />
@@ -93,11 +93,11 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               content={({ active, payload, label }) => {
                 if (!active || !payload || !payload.length) return null;
                 return (
-                  <div className="rounded-lg border border-zinc-800 bg-[#121215] p-2.5 shadow-lg text-xs">
-                    <p className="font-mono text-zinc-400 mb-1">{label}</p>
+                  <div className="rounded-lg border border-slate-800 bg-[#111827] p-2.5 shadow-xl text-xs">
+                    <p className="font-mono text-slate-400 mb-1">{label}</p>
                     {payload.map((entry, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-3 py-0.5">
-                        <span className="text-zinc-300" style={{ color: entry.color }}>
+                        <span className="text-slate-300" style={{ color: entry.color }}>
                           {entry.name}:
                         </span>
                         <span className="font-mono font-bold text-white">
@@ -122,7 +122,7 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               type="monotone"
               dataKey="upper_ci"
               stroke="transparent"
-              fill="#BE123C"
+              fill="#3B82F6"
               fillOpacity={0.12}
               name="90% Confidence Band"
             />
@@ -130,7 +130,7 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
               type="monotone"
               dataKey="lower_ci"
               stroke="transparent"
-              fill="#09090B"
+              fill="#0B0F19"
               name="CI Lower Bound"
               legendType="none"
             />
@@ -139,9 +139,9 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
             <Line
               type="monotone"
               dataKey="actual"
-              stroke="#71717A"
+              stroke="#64748B"
               strokeWidth={1.5}
-              dot={{ fill: "#71717A", r: 1.5 }}
+              dot={{ fill: "#94A3B8", r: 1.5 }}
               name="Historical Actuals"
             />
 
@@ -149,9 +149,9 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
             <Line
               type="monotone"
               dataKey="predicted"
-              stroke="#E11D48"
+              stroke="#3B82F6"
               strokeWidth={2.2}
-              dot={{ fill: "#E11D48", r: 2.5 }}
+              dot={{ fill: "#3B82F6", r: 2.5 }}
               name="Demand Forecast"
             />
 
@@ -159,7 +159,7 @@ export const DemandTrajectoryChart: React.FC<DemandTrajectoryChartProps> = ({
             <Line
               type="monotone"
               dataKey="baseline"
-              stroke="#D97706"
+              stroke="#F59E0B"
               strokeWidth={1.2}
               strokeDasharray="3 3"
               dot={false}

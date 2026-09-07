@@ -67,11 +67,11 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
             <h3 className="text-sm font-semibold tracking-tight text-white">
               Counterfactual Simulation
             </h3>
-            <p className="text-[11px] text-zinc-400">Exogenous shock & pricing levers</p>
+            <p className="text-[11px] text-slate-400">Exogenous shock & pricing levers</p>
           </div>
           <button
             onClick={handleReset}
-            className="text-[11px] text-zinc-400 hover:text-white px-2.5 py-0.5 rounded bg-zinc-800/80 border border-zinc-700/60 hover:border-zinc-500 transition-colors font-mono"
+            className="text-[11px] text-slate-400 hover:text-white px-2.5 py-0.5 rounded bg-slate-800/80 border border-slate-700/60 hover:border-slate-500 transition-colors font-mono"
           >
             Reset
           </button>
@@ -85,8 +85,8 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
               onClick={preset.apply}
               className={`py-1 px-1.5 text-center rounded-lg text-xs font-medium transition-all ${
                 preset.isActive
-                  ? "bg-rose-950 border border-rose-700/80 text-white shadow-sm font-semibold"
-                  : "bg-[#111115] border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700"
+                  ? "bg-blue-950 border border-blue-600/80 text-white shadow-sm font-semibold"
+                  : "bg-[#111827] border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
               }`}
             >
               {preset.label}

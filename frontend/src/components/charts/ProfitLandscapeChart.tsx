@@ -36,11 +36,11 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
           <h3 className="text-sm font-semibold tracking-tight text-white">
             Profit & Revenue Optimization Curve
           </h3>
-          <p className="text-[11px] text-zinc-400">
+          <p className="text-[11px] text-slate-400">
             Profit maximization across candidate price range
           </p>
         </div>
-        <span className="text-[11px] font-mono text-rose-300 bg-rose-950/80 border border-rose-800/40 px-2 py-0.5 rounded">
+        <span className="text-[11px] font-mono text-blue-300 bg-blue-950/80 border border-blue-800/50 px-2 py-0.5 rounded">
           Optimal: ${optData.optimal_price.toFixed(2)}
         </span>
       </div>
@@ -48,20 +48,20 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
       <div className="w-full h-[260px] min-h-[260px]">
         <ResponsiveContainer width="100%" height="100%" minHeight={260}>
           <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="2 2" stroke="#27272A" vertical={false} opacity={0.5} />
+            <CartesianGrid strokeDasharray="2 2" stroke="#1E293B" vertical={false} opacity={0.6} />
 
             <XAxis
               dataKey="price"
-              stroke="#52525B"
+              stroke="#475569"
               tickFormatter={(val) => `$${Number(val).toFixed(2)}`}
-              tick={{ fill: "#71717A", fontSize: 10, fontFamily: "JetBrains Mono" }}
+              tick={{ fill: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" }}
               tickLine={false}
-              axisLine={{ stroke: "#27272A" }}
+              axisLine={{ stroke: "#1E293B" }}
             />
             <YAxis
-              stroke="#52525B"
+              stroke="#475569"
               tickFormatter={(val) => `$${Number(val).toFixed(0)}`}
-              tick={{ fill: "#71717A", fontSize: 10, fontFamily: "JetBrains Mono" }}
+              tick={{ fill: "#94A3B8", fontSize: 10, fontFamily: "JetBrains Mono" }}
               tickLine={false}
               axisLine={false}
             />
@@ -73,15 +73,15 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
                 const profit = payload[0].payload.profit;
                 const revenue = payload[0].payload.revenue;
                 return (
-                  <div className="rounded-lg border border-zinc-800 bg-[#121215] p-2.5 shadow-lg text-xs">
-                    <p className="font-mono text-zinc-300 font-bold mb-1">Price: ${Number(p).toFixed(2)}</p>
+                  <div className="rounded-lg border border-slate-800 bg-[#111827] p-2.5 shadow-xl text-xs">
+                    <p className="font-mono text-slate-300 font-bold mb-1">Price: ${Number(p).toFixed(2)}</p>
                     <div className="flex items-center justify-between gap-3 py-0.5">
-                      <span className="text-zinc-400">Profit:</span>
-                      <span className="font-mono font-bold text-rose-400">${Number(profit).toFixed(2)}</span>
+                      <span className="text-slate-400">Operating Profit:</span>
+                      <span className="font-mono font-bold text-emerald-400">${Number(profit).toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between gap-3 py-0.5">
-                      <span className="text-zinc-400">Revenue:</span>
-                      <span className="font-mono font-bold text-indigo-400">${Number(revenue).toFixed(2)}</span>
+                      <span className="text-slate-400">Gross Revenue:</span>
+                      <span className="font-mono font-bold text-blue-400">${Number(revenue).toFixed(2)}</span>
                     </div>
                   </div>
                 );
@@ -99,7 +99,7 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
             <Line
               type="monotone"
               dataKey="revenue"
-              stroke="#818CF8"
+              stroke="#3B82F6"
               strokeWidth={1.5}
               strokeDasharray="3 3"
               dot={false}
@@ -110,9 +110,9 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
             <Area
               type="monotone"
               dataKey="profit"
-              stroke="#E11D48"
+              stroke="#10B981"
               strokeWidth={2.2}
-              fill="#E11D48"
+              fill="#10B981"
               fillOpacity={0.12}
               name="Operating Profit"
             />
@@ -137,7 +137,7 @@ export const ProfitLandscapeChart: React.FC<ProfitLandscapeChartProps> = ({
               x={optData.optimal_price}
               y={optData.optimal_profit}
               r={4}
-              fill="#F59E0B"
+              fill="#10B981"
               stroke="#FFFFFF"
               strokeWidth={1.5}
             />

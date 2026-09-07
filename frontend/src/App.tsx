@@ -34,11 +34,11 @@ export const App: React.FC = () => {
   const simulation = useMemo(() => computeSimulation(selectedSku, sliders), [selectedSku, sliders]);
 
   return (
-    <div className="relative min-h-screen bg-[#09090B] text-zinc-100 flex flex-col">
-      {/* Clean Dark Background */}
+    <div className="relative min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans">
+      {/* Subtle Slate Background */}
       <BackgroundGrid />
 
-      {/* Clean Header */}
+      {/* Sticky Executive Header */}
       <Header
         selectedSku={selectedSku}
         onSelectSku={setSelectedSku}
@@ -49,7 +49,7 @@ export const App: React.FC = () => {
       {/* Main Content */}
       <main className="relative z-10 max-w-[1500px] w-full mx-auto px-6 py-5 space-y-5 flex-1">
         
-        {/* Row 1: 5 Clean Metric Cards */}
+        {/* Row 1: 5 Executive KPI Bento Cards */}
         <section>
           <KpiHeroGrid
             optData={optData}
@@ -58,9 +58,9 @@ export const App: React.FC = () => {
           />
         </section>
 
-        {/* Row 2: Two Analytical Charts */}
+        {/* Row 2: Two Core Analytical Visualizations */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <SpotlightCard className="p-4 h-[330px]">
+          <SpotlightCard className="p-4 h-[340px]">
             <DemandTrajectoryChart
               historical={historical}
               forecast={forecast}
@@ -68,7 +68,7 @@ export const App: React.FC = () => {
             />
           </SpotlightCard>
 
-          <SpotlightCard className="p-4 h-[330px]">
+          <SpotlightCard className="p-4 h-[340px]">
             <ProfitLandscapeChart
               optData={optData}
               sku={selectedSku}
@@ -80,7 +80,7 @@ export const App: React.FC = () => {
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Sliders (4 cols) */}
           <div className="lg:col-span-4">
-            <SpotlightCard className="h-[340px] p-4">
+            <SpotlightCard className="h-[350px] p-4">
               <ScenarioControls
                 sliders={sliders}
                 onChangeSliders={setSliders}
@@ -90,14 +90,14 @@ export const App: React.FC = () => {
 
           {/* Impact Bars (4 cols) */}
           <div className="lg:col-span-4">
-            <SpotlightCard className="h-[340px] p-4">
+            <SpotlightCard className="h-[350px] p-4">
               <ScenarioComparisonChart simulation={simulation} />
             </SpotlightCard>
           </div>
 
           {/* Strategic Brief (4 cols) */}
           <div className="lg:col-span-4">
-            <div className="h-[340px]">
+            <div className="h-[350px]">
               <StrategicCompanion
                 simulation={simulation}
                 sku={selectedSku}
@@ -108,15 +108,15 @@ export const App: React.FC = () => {
 
       </main>
 
-      {/* Minimal Footer */}
-      <footer className="relative z-10 border-t border-zinc-800/60 bg-[#09090B] py-3 px-6 text-xs text-zinc-400">
+      {/* Minimal Enterprise Footer */}
+      <footer className="relative z-10 border-t border-slate-800/80 bg-[#0B0F19] py-3 px-6 text-xs text-slate-500">
         <div className="max-w-[1500px] mx-auto flex items-center justify-between">
-          <span>NAOMI Decision Companion</span>
+          <span>NAOMI Decision Companion • Neural Optimization Engine</span>
           <a
             href="https://github.com/princexpoddar/NAOMI"
             target="_blank"
             rel="noreferrer"
-            className="text-zinc-400 hover:text-zinc-300 transition-colors"
+            className="text-slate-400 hover:text-slate-200 transition-colors"
           >
             GitHub Repository
           </a>
